@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.turnos.model.EstadoTurno;
+import com.api.turnos.model.Sucursal;
 import com.api.turnos.model.Turno;
 import com.api.turnos.service.EstadoTurnoService;
+import com.api.turnos.service.SucursalService;
 import com.api.turnos.service.TurnoService;
 
 @RestController
@@ -25,13 +27,24 @@ public class TurnoController {
     @Autowired
     private EstadoTurnoService estadoTurnoService;
 
+    @Autowired
+    private SucursalService sucursalService; // Inyecta SucursalService aquí
+
     @PostMapping("/create")
     public ResponseEntity<Turno> createTurno(@RequestBody Turno turno) {
+        // Verifica si el estado es nulo y asigna un estado por defecto
         if (turno.getEstado() == null) {
-            // Asigna un estado por defecto
             EstadoTurno estadoPredeterminado = estadoTurnoService.getEstadoById(1L); // Usa un ID válido
             turno.setEstado(estadoPredeterminado);
         }
+
+        // Verifica si la sucursal es nula y asigna una sucursal por defecto
+        if (turno.getSucursal() == null) {
+            Sucursal sucursalPorDefecto = sucursalService.getSucursalById(1L); // Usa un ID válido
+            turno.setSucursal(sucursalPorDefecto);
+        }
+
+        // Guarda el turno
         Turno savedTurno = turnoService.saveTurno(turno);
         return ResponseEntity.ok(savedTurno);
     }
@@ -41,5 +54,4 @@ public class TurnoController {
     public List<Turno> getAllTurnos() {
         return turnoService.getAllTurnos();
     }
-
 }

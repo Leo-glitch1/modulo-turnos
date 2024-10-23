@@ -36,7 +36,7 @@ public class Turno {
     private LocalTime hora;
 
     @ManyToOne
-    @JoinColumn(name = "estado_id", nullable = false) // Asegúrate de que 'nullable' esté en 'false'
+    @JoinColumn(name = "estado_id", nullable = false)
     private EstadoTurno estado;
 
     @ManyToOne
